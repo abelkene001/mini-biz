@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
+import OrderNotificationModal from "./OrderNotificationModal";
 
 interface ShopBankDetails {
   accountName: string;
@@ -43,6 +44,12 @@ export default function PaymentModal({
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [orderData, setOrderData] = useState<{
+    customerName: string;
+    productName: string;
+    amount: number;
+  } | null>(null);
 
   const totalPrice = product.price * quantity;
 
@@ -130,39 +137,27 @@ export default function PaymentModal({
         }
 
         // Order created successfully
+        setSubmitted(true);
 
-        // Send WhatsApp notification to admin
-        if (shopWhatsapp) {
-          try {
-            const notificationMessage = `🎉 New Order Received!\n\n👤 Customer: ${customerName}\n📱 Phone: ${customerPhone}\n📍 Address: ${customerAddress}\n\n📦 Product: ${
-              product.name
-            }\n🔢 Qty: ${quantity}\n💰 Amount: ₦${totalPrice.toLocaleString()}\n\n✅ View details & confirm: Dashboard Sales Page`;
-
-            const digitsOnly = shopWhatsapp.replace(/[^0-9]/g, "");
-            const waUrl = `https://wa.me/${digitsOnly}?text=${encodeURIComponent(
-              notificationMessage
-            )}`;
-
-            // Open in new window for admin notification
-            window.open(waUrl, "_blank", "width=400,height=600");
-          } catch (waError) {
-            console.warn("WhatsApp notification error:", waError);
+        // Show notification modal after a short delay
+        setTimeout(() => {
+          if (shopWhatsapp) {
+            setOrderData({
+              customerName,
+              productName: product.name,
+              amount: totalPrice,
+            });
+            setShowNotificationModal(true);
           }
-        }
+        }, 800);
+
+        // Close main modal after timeout
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2500);
       }
 
       setSubmitted(true);
-      setTimeout(() => {
-        onClose();
-        setSubmitted(false);
-        setCustomerName("");
-        setCustomerPhone("");
-        setCustomerAddress("");
-        setProofFile(null);
-        setPreviewUrl("");
-        setQuantity(1);
-        setError(null);
-      }, 2000);
     } catch (err) {
       console.error("Order failed:", err);
       const errorMessage =
@@ -171,6 +166,20 @@ export default function PaymentModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    onClose();
+    setSubmitted(false);
+    setCustomerName("");
+    setCustomerPhone("");
+    setCustomerAddress("");
+    setProofFile(null);
+    setPreviewUrl("");
+    setQuantity(1);
+    setError(null);
+    setShowNotificationModal(false);
+    setOrderData(null);
   };
 
   if (!isOpen) return null;
@@ -185,7 +194,7 @@ export default function PaymentModal({
             <p className="text-sky-100 mt-1">From {shopName}</p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleCloseModal}
             className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
           >
             <svg
@@ -475,14 +484,26 @@ export default function PaymentModal({
               {loading ? "Submitting..." : "✓ Submit Order"}
             </button>
 
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
-              <p className="text-xs text-green-800 text-center font-medium">
-                ✅ Details and proof sent to merchant via WhatsApp
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+              <p className="text-xs text-blue-800 text-center font-medium">
+                ℹ️ After submission, you'll have the option to notify the merchant via WhatsApp
               </p>
             </div>
           </form>
         )}
       </div>
+
+      {/* Order Notification Modal */}
+      {orderData && (
+        <OrderNotificationModal
+          isOpen={showNotificationModal}
+          onClose={handleCloseModal}
+          adminWhatsapp={shopWhatsapp}
+          customerName={orderData.customerName}
+          productName={orderData.productName}
+          amount={orderData.amount}
+        />
+      )}
     </div>
   );
 }

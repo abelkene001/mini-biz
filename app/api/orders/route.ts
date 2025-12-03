@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { sendOrderNotification } from "@/lib/telegramNotifications";
+import { sendOrderNotification } from "@/lib/whatsappNotifications";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get shop by slug to find owner's Telegram Chat ID
+    // Get shop by slug to find owner's WhatsApp number
     const { data: shop, error: shopError } = await supabase
       .from("shops")
       .select("id, user_id, name, whatsapp_number")
@@ -63,9 +63,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Send Telegram notification to shop owner
-    // Note: For now using whatsapp_number field to store Telegram Chat ID
-    // You can add a separate telegram_chat_id field to shops table later
+    // Send WhatsApp notification to shop owner
     if (shop.whatsapp_number) {
       const notificationResult = await sendOrderNotification(
         shop.whatsapp_number,
@@ -90,7 +88,7 @@ export async function POST(req: Request) {
         status: order.status,
         createdAt: order.created_at,
       },
-      message: "Order created successfully. Admin notified via Telegram.",
+      message: "Order created successfully. Admin notified via WhatsApp.",
     });
   } catch (error) {
     console.error("Order creation error:", error);

@@ -76,9 +76,10 @@ export default function SettingsPage() {
     }
 
     if (formData.whatsapp_number.trim()) {
-      // Telegram Chat ID should be numeric (optional field)
-      if (!/^\d+$/.test(formData.whatsapp_number.trim())) {
-        newErrors.whatsapp_number = "Telegram Chat ID must be numeric";
+      // Simple WhatsApp validation: should contain digits
+      const cleanedNumber = formData.whatsapp_number.replace(/\D/g, "");
+      if (cleanedNumber.length < 10 || cleanedNumber.length > 15) {
+        newErrors.whatsapp_number = "WhatsApp number must be 10-15 digits";
       }
     }
 
@@ -292,7 +293,7 @@ export default function SettingsPage() {
             <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <span className="text-2xl">💬</span>
-                Notification Preferences
+                Contact Information
               </h2>
             </div>
 
@@ -302,21 +303,26 @@ export default function SettingsPage() {
                   htmlFor="whatsapp_number"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  Telegram Chat ID
+                  WhatsApp Number
                 </label>
-                <input
-                    type="text"
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span className="text-gray-400 font-medium">+</span>
+                  </div>
+                  <input
+                    type="tel"
                     id="whatsapp_number"
                     name="whatsapp_number"
                     value={formData.whatsapp_number}
                     onChange={handleChange}
-                    placeholder="Enter your Telegram Chat ID"
-                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 font-medium ${
+                    placeholder="234 800 000 0000"
+                    className={`w-full pl-8 pr-4 py-3 rounded-lg border-2 transition-colors duration-200 font-medium ${
                       errors.whatsapp_number
                         ? "border-red-500 bg-red-50 text-gray-900 placeholder-red-400"
                         : "border-gray-200 bg-gray-50 hover:border-emerald-200 focus:border-emerald-500 focus:bg-white text-gray-900"
                     } focus:outline-none`}
                   />
+                </div>
                 {errors.whatsapp_number && (
                   <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
                     <svg
@@ -334,14 +340,8 @@ export default function SettingsPage() {
                   </p>
                 )}
                 <p className="mt-2 text-xs text-gray-500">
-                  <strong>How to get your Telegram Chat ID:</strong>
-                  <ol className="mt-2 ml-4 space-y-1 list-decimal">
-                    <li>Search for <code className="bg-gray-100 px-1 py-0.5 rounded">@BotFather</code> on Telegram</li>
-                    <li>Create a new bot and get your Bot Token</li>
-                    <li>Start a chat with your bot</li>
-                    <li>Visit: <code className="bg-gray-100 px-1 py-0.5 rounded">https://api.telegram.org/bot{`<YOUR_BOT_TOKEN>`}/getUpdates</code></li>
-                    <li>Copy your Chat ID from the response</li>
-                  </ol>
+                  Enter your WhatsApp number including country code (e.g.,
+                  +234...)
                 </p>
               </div>
             </div>
