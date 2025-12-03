@@ -34,3 +34,30 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Setup & Development (Local)
+
+1. Install dependencies (run this from the project root using cmd):
+
+```cmd
+npm install
+npm install @supabase/supabase-js
+```
+
+2. Environment variables (create a `.env.local` with the following keys):
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=public-anon-key
+SUPABASE_SERVICE_ROLE_KEY=service-role-key (optional -- only needed server-side)
+```
+
+3. Run the dev server:
+
+```cmd
+npm run dev
+```
+
+4. Onboarding and auth are using Supabase. If you haven't created the `shops` and `products` tables in Supabase, the app will use placeholders. You can either create these tables or let the fallback UI render while you continue development.
+
+If you'd like me to add migrations or a Prisma schema and automatic migration tooling, I can do that next.
