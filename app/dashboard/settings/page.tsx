@@ -384,7 +384,9 @@ export default function SettingsPage() {
                         hero_image_url: url,
                       }))
                     }
-                    onError={(error) => setErrors((prev) => ({ ...prev, hero_image_url: error }))}
+                    onError={(error) =>
+                      setErrors((prev) => ({ ...prev, hero_image_url: error }))
+                    }
                   />
                 </div>
                 <p className="text-xs text-gray-500">

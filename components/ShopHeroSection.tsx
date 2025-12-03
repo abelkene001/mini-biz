@@ -68,7 +68,10 @@ export default function ShopHeroSection({
               </button>
               {whatsappNumber && (
                 <a
-                  href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`}
+                  href={`https://wa.me/${whatsappNumber.replace(
+                    /[^0-9]/g,
+                    ""
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-50 transition-all"

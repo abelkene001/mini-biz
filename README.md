@@ -60,4 +60,16 @@ npm run dev
 
 4. Onboarding and auth are using Supabase. If you haven't created the `shops` and `products` tables in Supabase, the app will use placeholders. You can either create these tables or let the fallback UI render while you continue development.
 
+## Supabase Storage Setup
+
+To enable image uploads (for products and shop hero images), you need to create storage buckets in Supabase:
+
+1. Go to your [Supabase Dashboard](https://app.supabase.com)
+2. Navigate to **Storage** in the left sidebar
+3. Create two public buckets:
+   - `product-images` - for product photos
+   - `shop-images` - for shop hero section images
+
+**See `SUPABASE_STORAGE_SETUP.md` for detailed instructions.**
+
 If you'd like me to add migrations or a Prisma schema and automatic migration tooling, I can do that next.
