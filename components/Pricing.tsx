@@ -50,7 +50,7 @@ export default function Pricing() {
 
             {/* CTA Button */}
             <Link
-              href="/signup"
+              href="/auth/signup"
               className="mt-8 block w-full rounded-2xl bg-linear-to-br from-blue-600 to-blue-700 py-4 text-center font-black text-white text-lg hover:shadow-xl transition-all transform hover:scale-105 shadow-lg"
             >
               Get Started Today →

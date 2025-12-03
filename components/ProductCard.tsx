@@ -55,7 +55,7 @@ export default function ProductCard({
     <>
       <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-105">
         {/* Image Container */}
-        <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+        <div className="relative w-full aspect-video bg-gray-100 overflow-hidden">
           {product.image_url ? (
             <Image
               src={product.image_url}

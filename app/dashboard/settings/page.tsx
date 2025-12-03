@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
+import ImageUpload from "@/components/ImageUpload";
 
 interface ShopData {
   id: string;
@@ -11,6 +12,9 @@ interface ShopData {
   bank_name: string;
   bank_account_number: string;
   bank_account_name: string;
+  hero_image_url: string;
+  hero_title: string;
+  hero_tagline: string;
 }
 
 interface FormErrors {
@@ -31,6 +35,9 @@ export default function SettingsPage() {
     bank_name: "",
     bank_account_number: "",
     bank_account_name: "",
+    hero_image_url: "",
+    hero_title: "",
+    hero_tagline: "",
   });
 
   // Fetch shop data
@@ -59,6 +66,9 @@ export default function SettingsPage() {
           bank_name: data.bank_name || "",
           bank_account_number: data.bank_account_number || "",
           bank_account_name: data.bank_account_name || "",
+          hero_image_url: data.hero_image_url || "",
+          hero_title: data.hero_title || "",
+          hero_tagline: data.hero_tagline || "",
         });
       }
     } catch (err) {
@@ -144,6 +154,9 @@ export default function SettingsPage() {
           bank_name: formData.bank_name,
           bank_account_number: formData.bank_account_number,
           bank_account_name: formData.bank_account_name,
+          hero_image_url: formData.hero_image_url,
+          hero_title: formData.hero_title,
+          hero_tagline: formData.hero_tagline,
         })
         .eq("id", shop.id);
 
@@ -347,6 +360,111 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Shop Customization Section */}
+          <div className="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <span className="text-2xl">🎨</span>
+                Shop Customization
+              </h2>
+            </div>
+
+            <div className="px-6 py-6 space-y-6">
+              {/* Hero Image */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Hero Section Image
+                </label>
+                <div className="mb-3">
+                  <ImageUpload
+                    bucket="shop-images"
+                    onUploadComplete={(url) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        hero_image_url: url,
+                      }))
+                    }
+                    onError={(error) => setErrors((prev) => ({ ...prev, hero_image_url: error }))}
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  Upload a high-quality image for your shop&apos;s hero section
+                  (recommended: 1200x600px)
+                </p>
+              </div>
+
+              {/* Hero Title */}
+              <div>
+                <label
+                  htmlFor="hero_title"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Hero Title
+                </label>
+                <div>
+                  <input
+                    type="text"
+                    id="hero_title"
+                    name="hero_title"
+                    value={formData.hero_title}
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, 100);
+                      setFormData((prev) => ({
+                        ...prev,
+                        hero_title: value,
+                      }));
+                    }}
+                    placeholder="Welcome to our shop!"
+                    maxLength={100}
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 font-medium ${
+                      errors.hero_title
+                        ? "border-red-500 bg-red-50 text-gray-900 placeholder-red-400"
+                        : "border-gray-200 bg-gray-50 hover:border-purple-200 focus:border-purple-500 focus:bg-white text-gray-900"
+                    } focus:outline-none`}
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    {formData.hero_title.length}/100 characters
+                  </p>
+                </div>
+              </div>
+
+              {/* Hero Tagline */}
+              <div>
+                <label
+                  htmlFor="hero_tagline"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Hero Tagline
+                </label>
+                <div>
+                  <textarea
+                    id="hero_tagline"
+                    name="hero_tagline"
+                    value={formData.hero_tagline}
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, 150);
+                      setFormData((prev) => ({
+                        ...prev,
+                        hero_tagline: value,
+                      }));
+                    }}
+                    placeholder="A great place to find amazing products..."
+                    maxLength={150}
+                    rows={3}
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 font-medium resize-none ${
+                      errors.hero_tagline
+                        ? "border-red-500 bg-red-50 text-gray-900 placeholder-red-400"
+                        : "border-gray-200 bg-gray-50 hover:border-purple-200 focus:border-purple-500 focus:bg-white text-gray-900"
+                    } focus:outline-none`}
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    {formData.hero_tagline.length}/150 characters
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Bank Information Section */}
           <div className="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
@@ -538,6 +656,9 @@ export default function SettingsPage() {
                   bank_name: shop?.bank_name || "",
                   bank_account_number: shop?.bank_account_number || "",
                   bank_account_name: shop?.bank_account_name || "",
+                  hero_image_url: shop?.hero_image_url || "",
+                  hero_title: shop?.hero_title || "",
+                  hero_tagline: shop?.hero_tagline || "",
                 });
                 setErrors({});
               }}

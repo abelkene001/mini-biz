@@ -10,6 +10,9 @@ create table if not exists public.shops (
   bank_name text,
   bank_account_number text,
   bank_account_name text,
+  hero_image_url text,
+  hero_title text,
+  hero_tagline text,
   created_at timestamptz default now()
 );
 

@@ -62,11 +62,6 @@ Please confirm order receipt and details in your dashboard.`;
       )}`;
 
       window.open(whatsappUrl, "_blank", "width=500,height=700");
-
-      // Close modal after a short delay
-      setTimeout(() => {
-        onClose();
-      }, 500);
     } catch (error) {
       console.error("Error opening WhatsApp:", error);
     } finally {
@@ -87,7 +82,8 @@ Please confirm order receipt and details in your dashboard.`;
         <div className="p-8 space-y-6">
           <div className="space-y-2">
             <p className="text-gray-600 text-center">
-              Would you like to notify the shop admin about your order via WhatsApp?
+              Would you like to notify the shop admin about your order via
+              WhatsApp?
             </p>
             <div className="bg-green-50 border border-green-200 rounded-xl p-4 mt-4">
               <p className="text-sm text-gray-700">
@@ -97,7 +93,10 @@ Please confirm order receipt and details in your dashboard.`;
                 Product: <span className="font-medium">{productName}</span>
               </p>
               <p className="text-sm text-gray-600">
-                Amount: <span className="font-bold text-green-600">₦{amount.toLocaleString()}</span>
+                Amount:{" "}
+                <span className="font-bold text-green-600">
+                  ₦{amount.toLocaleString()}
+                </span>
               </p>
             </div>
           </div>
@@ -156,7 +155,8 @@ Please confirm order receipt and details in your dashboard.`;
 
           {/* Info */}
           <p className="text-xs text-gray-500 text-center">
-            💡 This will open WhatsApp on your device with a pre-written message to the shop admin.
+            💡 This will open WhatsApp on your device with a pre-written message
+            to the shop admin.
           </p>
         </div>
       </div>

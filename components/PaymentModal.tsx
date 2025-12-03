@@ -486,7 +486,8 @@ export default function PaymentModal({
 
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
               <p className="text-xs text-blue-800 text-center font-medium">
-                ℹ️ After submission, you'll have the option to notify the merchant via WhatsApp
+                ℹ️ After submission, you'll have the option to notify the
+                merchant via WhatsApp
               </p>
             </div>
           </form>
