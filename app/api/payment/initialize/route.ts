@@ -49,11 +49,23 @@ export async function POST(req: Request) {
     }
 
     // Check if user already has an active subscription
-    const { data: existingSubscription } = await supabase
+    const { data: existingSubscription, error: selectError } = await supabase
       .from("subscriptions")
       .select("*")
       .eq("user_id", userId)
       .single();
+
+    if (selectError && selectError.code !== "PGRST116") {
+      // PGRST116 is "no rows found" which is expected
+      console.error("Subscription select error:", selectError);
+      return NextResponse.json(
+        {
+          error: "Failed to check subscription status",
+          details: selectError.message,
+        },
+        { status: 500 }
+      );
+    }
 
     if (existingSubscription && existingSubscription.status === "active") {
       return NextResponse.json({
@@ -68,7 +80,7 @@ export async function POST(req: Request) {
     let subscriptionId = existingSubscription?.id;
 
     if (!existingSubscription) {
-      const { data: newSubscription } = await supabase
+      const { data: newSubscription, error: insertError } = await supabase
         .from("subscriptions")
         .insert([
           {
@@ -79,6 +91,17 @@ export async function POST(req: Request) {
         ])
         .select("id")
         .single();
+
+      if (insertError) {
+        console.error("Subscription insert error:", insertError);
+        return NextResponse.json(
+          {
+            error: "Failed to create subscription record",
+            details: insertError.message,
+          },
+          { status: 500 }
+        );
+      }
 
       subscriptionId = newSubscription?.id;
     }
@@ -94,12 +117,18 @@ export async function POST(req: Request) {
 
     // Initialize Paystack payment
     const reference = `sub_${subscriptionId}_${Date.now()}`;
+
+    // Get the proper callback URL - with better logic
+    let appUrl = "http://localhost:3000"; // Default for development
     
-    // Get the proper callback URL
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
-                   "http://localhost:3000";
-    
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      // If explicitly set in env, use it (priority for Vercel)
+      appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    } else if (process.env.VERCEL_URL) {
+      // Fallback to Vercel auto-generated URL
+      appUrl = `https://${process.env.VERCEL_URL}`;
+    }
+
     const callbackUrl = `${appUrl}/api/payment/verify?reference=${reference}`;
 
     console.log("Paystack initialization request:", {
@@ -108,6 +137,8 @@ export async function POST(req: Request) {
       reference,
       callbackUrl,
       appUrl,
+      vercelUrl: process.env.VERCEL_URL,
+      nextPublicAppUrl: process.env.NEXT_PUBLIC_APP_URL,
     });
 
     const paystackResponse = await fetch(
@@ -139,7 +170,7 @@ export async function POST(req: Request) {
         error,
       });
       return NextResponse.json(
-        { 
+        {
           error: "Failed to initialize payment with Paystack",
           details: error.message || error,
         },
@@ -176,7 +207,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Payment initialization error:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Internal server error",
         details: error instanceof Error ? error.message : String(error),
       },

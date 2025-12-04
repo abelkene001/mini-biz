@@ -29,11 +29,13 @@ Replace `your-vercel-domain` with your actual Vercel domain (e.g., `mini-biz.ver
 ### Example Values:
 
 **Development (.env.local):**
+
 ```
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 **Production (Vercel):**
+
 ```
 NEXT_PUBLIC_APP_URL=https://shopza-prod.vercel.app
 ```
@@ -65,11 +67,13 @@ NEXT_PUBLIC_APP_URL=https://your-vercel-domain.vercel.app
 ## How the Fix Works
 
 ### Before:
+
 - Callback URL was hardcoded to `http://localhost:3000` from environment
 - Paystack script strategy was `lazyOnload` which could cause timing issues
 - No fallback for production environment
 
 ### After:
+
 - Callback URL now uses:
   1. `NEXT_PUBLIC_APP_URL` if set
   2. Falls back to `https://${VERCEL_URL}` in production
@@ -80,12 +84,14 @@ NEXT_PUBLIC_APP_URL=https://your-vercel-domain.vercel.app
 ## Testing
 
 ### In Development:
+
 ```bash
 npm run dev
 # Payment should work at http://localhost:3000/payment
 ```
 
 ### After Deploying to Vercel:
+
 1. Set the `NEXT_PUBLIC_APP_URL` environment variable
 2. Redeploy the project (or wait for auto-redeployment)
 3. Test the payment flow at https://your-vercel-domain.vercel.app/payment
@@ -93,15 +99,18 @@ npm run dev
 ## Common Errors and Solutions
 
 ### Error: "Failed to initialize Paystack"
+
 - Check that `NEXT_PUBLIC_APP_URL` is set in Vercel environment variables
-- Verify Paystack keys are correct (pk_live_ and sk_live_)
+- Verify Paystack keys are correct (pk*live* and sk*live*)
 - Check Vercel logs for detailed error messages
 
 ### Error: "Cannot destructure property 'language' of 'object null'"
+
 - This is now fixed with proper response validation
 - Paystack response is now checked before being used
 
 ### Error: "Please put your Paystack Inline javascript inside of a form element"
+
 - Script loading strategy has been updated
 - This should be resolved with the `afterInteractive` strategy
 
