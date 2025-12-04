@@ -283,7 +283,7 @@ export default function PaymentModal({
                     setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                   }
                   min="1"
-                  className="flex-1 text-center border-2 border-gray-300 rounded-xl py-3 px-3 font-bold text-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                  className="flex-1 text-center border-2 border-gray-300 rounded-xl py-3 px-3 font-bold text-lg text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 <button
                   type="button"
@@ -387,7 +387,7 @@ export default function PaymentModal({
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 required
-                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-700"
                 placeholder="Your full name"
               />
             </div>
@@ -401,7 +401,7 @@ export default function PaymentModal({
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
                 required
-                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors placeholder:text-slate-700"
                 placeholder="08012345678"
               />
             </div>
@@ -415,7 +415,7 @@ export default function PaymentModal({
                 onChange={(e) => setCustomerAddress(e.target.value)}
                 required
                 rows={3}
-                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors resize-none"
+                className="w-full border-2 border-gray-300 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors resize-none placeholder:text-slate-700"
                 placeholder="Enter your delivery address"
               />
             </div>
