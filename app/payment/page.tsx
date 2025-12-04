@@ -80,6 +80,13 @@ export default function PaymentPage() {
         return;
       }
 
+      // Validate response has required fields
+      if (!data.reference || !data.accessCode) {
+        setError("Invalid payment response from server");
+        setLoading(false);
+        return;
+      }
+
       setPaymentData(data);
 
       // Step 2: Open Paystack payment modal
@@ -94,12 +101,20 @@ export default function PaymentPage() {
         email: user.email,
         amount: planAmountKobo,
         ref: data.reference,
+        accessCode: data.accessCode,
         currency: "NGN",
         onClose: () => {
           setLoading(false);
           setError("Payment window closed");
         },
         onSuccess: async (response: any) => {
+          // Validate response before destructuring
+          if (!response || !response.reference) {
+            setError("Invalid payment response");
+            setLoading(false);
+            return;
+          }
+
           // Step 3: Verify payment
           const verifyResponse = await fetch("/api/payment/verify", {
             method: "POST",
@@ -108,8 +123,7 @@ export default function PaymentPage() {
             },
             body: JSON.stringify({
               reference: response.reference,
-              subscriptionId:
-                paymentData?.subscriptionId || data.subscriptionId,
+              subscriptionId: data.subscriptionId,
             }),
           });
 
@@ -159,10 +173,9 @@ export default function PaymentPage() {
     <>
       <Script
         src="https://js.paystack.co/v1/inline.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onError={(e) => {
-          // Suppress Paystack library warnings
-          console.debug("Paystack script loaded with non-blocking warnings");
+          console.debug("Paystack script load warning:", e);
         }}
       />
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">

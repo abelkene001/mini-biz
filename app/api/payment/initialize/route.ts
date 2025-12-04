@@ -83,7 +83,33 @@ export async function POST(req: Request) {
       subscriptionId = newSubscription?.id;
     }
 
+    // Validate subscription ID was created
+    if (!subscriptionId) {
+      console.error("Failed to create subscription record");
+      return NextResponse.json(
+        { error: "Failed to create subscription record" },
+        { status: 500 }
+      );
+    }
+
     // Initialize Paystack payment
+    const reference = `sub_${subscriptionId}_${Date.now()}`;
+    
+    // Get the proper callback URL
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
+                   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+                   "http://localhost:3000";
+    
+    const callbackUrl = `${appUrl}/api/payment/verify?reference=${reference}`;
+
+    console.log("Paystack initialization request:", {
+      email,
+      amount: planAmountKobo,
+      reference,
+      callbackUrl,
+      appUrl,
+    });
+
     const paystackResponse = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -95,8 +121,8 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           email: email,
           amount: planAmountKobo,
-          reference: `sub_${subscriptionId}_${Date.now()}`,
-          callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/verify`,
+          reference: reference,
+          callback_url: callbackUrl,
           metadata: {
             userId: userId,
             subscriptionId: subscriptionId,
@@ -108,24 +134,37 @@ export async function POST(req: Request) {
 
     if (!paystackResponse.ok) {
       const error = await paystackResponse.json();
-      console.error("Paystack error:", error);
+      console.error("Paystack error response:", {
+        status: paystackResponse.status,
+        error,
+      });
       return NextResponse.json(
-        { error: "Failed to initialize payment with Paystack" },
+        { 
+          error: "Failed to initialize payment with Paystack",
+          details: error.message || error,
+        },
         { status: 500 }
       );
     }
 
     const paystackData = await paystackResponse.json();
 
-    // Store the Paystack reference in subscription
-    if (subscriptionId) {
-      await supabase
-        .from("subscriptions")
-        .update({
-          payment_reference: paystackData.data.reference,
-        })
-        .eq("id", subscriptionId);
+    // Validate response has required fields
+    if (!paystackData.data || !paystackData.data.authorization_url) {
+      console.error("Invalid Paystack response:", paystackData);
+      return NextResponse.json(
+        { error: "Invalid response from Paystack" },
+        { status: 500 }
+      );
     }
+
+    // Store the Paystack reference in subscription
+    await supabase
+      .from("subscriptions")
+      .update({
+        payment_reference: paystackData.data.reference,
+      })
+      .eq("id", subscriptionId);
 
     return NextResponse.json({
       status: "success",
@@ -137,7 +176,10 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Payment initialization error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
