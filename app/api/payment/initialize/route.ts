@@ -120,7 +120,7 @@ export async function POST(req: Request) {
 
     // Get the proper callback URL - with better logic
     let appUrl = "http://localhost:3000"; // Default for development
-    
+
     if (process.env.NEXT_PUBLIC_APP_URL) {
       // If explicitly set in env, use it (priority for Vercel)
       appUrl = process.env.NEXT_PUBLIC_APP_URL;

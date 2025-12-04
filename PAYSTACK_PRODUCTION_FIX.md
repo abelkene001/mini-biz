@@ -90,6 +90,7 @@ NEXT_PUBLIC_APP_URL=https://shopza-link.vercel.app
 If you're getting a 500 error on the `/api/payment/initialize` endpoint, follow these steps:
 
 ### Step 1: Check Vercel Logs
+
 1. Go to your Vercel project dashboard
 2. Click **Settings** → **Monitoring** or **Logs**
 3. Look for requests to `/api/payment/initialize`
@@ -99,7 +100,9 @@ If you're getting a 500 error on the `/api/payment/initialize` endpoint, follow 
    - Environment variable values for debugging
 
 ### Step 2: Verify Environment Variables
+
 1. Check that all required environment variables are set in Vercel:
+
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `PAYSTACK_SECRET_KEY`
@@ -115,18 +118,22 @@ If you're getting a 500 error on the `/api/payment/initialize` endpoint, follow 
 ### Step 3: Common Causes of 500 Error
 
 **❌ Issue: NEXT_PUBLIC_APP_URL not set**
+
 - Solution: Add it to Vercel environment variables
 - Test: Should show proper callback URL in Vercel logs
 
 **❌ Issue: SUPABASE_SERVICE_ROLE_KEY is missing or invalid**
+
 - Solution: Get it from Supabase dashboard → Settings → API
 - Test: Try creating a subscription in Supabase directly
 
 **❌ Issue: Subscriptions table doesn't exist or schema is wrong**
+
 - Solution: Run migrations in Supabase
 - Check Supabase tables to verify `subscriptions` table exists
 
 **❌ Issue: Paystack credentials are invalid**
+
 - Solution: Verify `PAYSTACK_SECRET_KEY` starts with `sk_live_`
 - Test: Check if the key works in Paystack dashboard
 
@@ -145,6 +152,7 @@ curl -X POST https://shopza-link.vercel.app/api/payment/initialize \
 ```
 
 This should return either:
+
 - Success: `{ status: "success", authorizationUrl: "...", ... }`
 - Error with details about what failed
 
@@ -169,7 +177,7 @@ npm run dev
 ### Error: "Failed to initialize Paystack"
 
 - Check that `NEXT_PUBLIC_APP_URL` is set in Vercel environment variables
-- Verify Paystack keys are correct (pk_live_ and sk_live_)
+- Verify Paystack keys are correct (pk*live* and sk*live*)
 - Check Vercel logs for detailed error messages
 - Verify Supabase credentials are correct
 

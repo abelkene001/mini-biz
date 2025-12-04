@@ -101,7 +101,6 @@ export default function PaymentPage() {
         email: user.email,
         amount: planAmountKobo,
         ref: data.reference,
-        accessCode: data.accessCode,
         currency: "NGN",
         onClose: () => {
           setLoading(false);
@@ -148,7 +147,8 @@ export default function PaymentPage() {
         },
       });
 
-      handler.openIframe();
+      // Use makeRequest instead of openIframe for Inline
+      handler.makeRequest();
     } catch (err) {
       console.error("Payment error:", err);
       setError(
