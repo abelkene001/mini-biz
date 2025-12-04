@@ -81,74 +81,15 @@ export default function PaymentPage() {
       }
 
       // Validate response has required fields
-      if (!data.reference || !data.accessCode) {
+      if (!data.authorizationUrl) {
         setError("Invalid payment response from server");
         setLoading(false);
         return;
       }
 
-      setPaymentData(data);
-
-      // Step 2: Open Paystack payment modal
-      if (!window.PaystackPop) {
-        setError("Payment system loading. Please try again in a moment.");
-        setLoading(false);
-        return;
-      }
-
-      const handler = window.PaystackPop.setup({
-        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-        email: user.email,
-        amount: planAmountKobo,
-        ref: data.reference,
-        currency: "NGN",
-        onClose: () => {
-          setLoading(false);
-          setError("Payment window closed");
-        },
-        onSuccess: async (response: any) => {
-          // Validate response before destructuring
-          if (!response || !response.reference) {
-            setError("Invalid payment response");
-            setLoading(false);
-            return;
-          }
-
-          // Step 3: Verify payment
-          const verifyResponse = await fetch("/api/payment/verify", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              reference: response.reference,
-              subscriptionId: data.subscriptionId,
-            }),
-          });
-
-          if (!verifyResponse.ok) {
-            const errorData = await verifyResponse.json();
-            setError(errorData.error || "Payment verification failed");
-            setLoading(false);
-            return;
-          }
-
-          const verifyData = await verifyResponse.json();
-
-          if (verifyData.status === "success") {
-            setSuccess(true);
-            // Redirect to onboarding after successful payment
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            router.push("/onboarding");
-          } else {
-            setError(verifyData.error || "Payment verification failed");
-            setLoading(false);
-          }
-        },
-      });
-
-      // Use makeRequest instead of openIframe for Inline
-      handler.makeRequest();
+      // Use Paystack Standard - redirect to Paystack
+      // Paystack will handle the payment and redirect back to callback_url
+      window.location.href = data.authorizationUrl;
     } catch (err) {
       console.error("Payment error:", err);
       setError(

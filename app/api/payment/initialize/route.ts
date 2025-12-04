@@ -129,7 +129,7 @@ export async function POST(req: Request) {
       appUrl = `https://${process.env.VERCEL_URL}`;
     }
 
-    const callbackUrl = `${appUrl}/api/payment/verify?reference=${reference}`;
+    const callbackUrl = `${appUrl}/payment/callback`;
 
     console.log("Paystack initialization request:", {
       email,
