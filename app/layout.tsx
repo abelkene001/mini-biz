@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShopLink - Your online-Shop in 5 Minutes",
+  title: "ShopZa - Your online-Shop in 5 Minutes",
   description:
     "Create a mini-shop, share one link, get orders on WhatsApp. No website needed. No coding required.",
 };

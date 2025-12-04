@@ -150,11 +150,6 @@ export default function PaymentModal({
             setShowNotificationModal(true);
           }
         }, 800);
-
-        // Close main modal after timeout
-        setTimeout(() => {
-          handleCloseModal();
-        }, 2500);
       }
 
       setSubmitted(true);

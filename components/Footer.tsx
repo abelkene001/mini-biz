@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid gap-8 sm:grid-cols-4">
           <div>
-            <div className="font-bold text-gray-900 text-lg">ShopLink</div>
+            <div className="font-bold text-gray-900 text-lg">ShopZa</div>
             <p className="mt-2 text-sm text-gray-600">
               Your WhatsApp shop in minutes
             </p>
@@ -68,7 +68,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-          <p>© {new Date().getFullYear()} ShopLink. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ShopZa. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -39,7 +39,7 @@ export default function Navbar() {
             <span className="text-lg font-bold text-white">S</span>
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-sky-600 to-sky-700 bg-clip-text text-transparent">
-            ShopLink
+            ShopZa
           </span>
         </Link>
 

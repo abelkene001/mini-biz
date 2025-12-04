@@ -205,7 +205,7 @@ export default function OnboardingPage() {
                         <p className="mt-2 text-sm text-gray-600">
                           Your shop URL:{" "}
                           <span className="font-medium text-gray-900">
-                            shoplink.vercel.app/{previewSlug}
+                            shopza.vercel.app/{previewSlug}
                           </span>
                         </p>
                       )}

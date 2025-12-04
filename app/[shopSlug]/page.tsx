@@ -167,11 +167,11 @@ export default async function ShopPage({ params }: Props) {
                 <div className="h-8 w-8 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold">
                   S
                 </div>
-                <span className="font-bold text-gray-900">ShopLink</span>
+                <span className="font-bold text-gray-900">Shopza</span>
               </div>
               <p className="text-sm text-gray-600">
-                Your WhatsApp shop, powered by ShopLink. Browse, chat, and
-                purchase with ease.
+                Your online-shop, powered by Shopza. Browse, chat, and purchase
+                with ease.
               </p>
             </div>
             <div>
@@ -203,11 +203,11 @@ export default async function ShopPage({ params }: Props) {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 mb-4 text-sm">
-                About ShopLink
+                About Shopza
               </h3>
               <p className="text-sm text-gray-600">
-                ShopLink makes it easy for businesses to sell on WhatsApp.
-                Simple, fast, and secure.
+                Shopza makes it easy for businesses to sell online. Simple,
+                fast, and secure.
               </p>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default async function ShopPage({ params }: Props) {
                 href="/"
                 className="font-semibold text-sky-600 hover:text-sky-700 transition-colors"
               >
-                ShopLink
+                Shopza
               </a>
             </p>
           </div>
