@@ -2,13 +2,39 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendOrderNotification } from "@/lib/whatsappNotifications";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Environment variable validation
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Create supabase client with safe fallback
+const supabase = createClient(
+  supabaseUrl || "https://placeholder.supabase.co",
+  supabaseServiceKey || "placeholder-key"
+);
+
+// Helper function to validate required env vars
+function validateEnvVars(): { valid: boolean; error?: string } {
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return {
+      valid: false,
+      error: "Supabase environment variables are not configured",
+    };
+  }
+  return { valid: true };
+}
 
 export async function POST(req: Request) {
   try {
+    // Validate environment variables
+    const envValidation = validateEnvVars();
+    if (!envValidation.valid) {
+      console.error("Environment variable error:", envValidation.error);
+      return NextResponse.json(
+        { error: envValidation.error },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const {
       shopSlug,
