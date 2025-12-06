@@ -13,6 +13,8 @@ interface ShopData {
   bank_account_number: string;
   bank_account_name: string;
   hero_image_url: string;
+  hero_image_landscape: string;
+  hero_image_portrait: string;
   hero_title: string;
   hero_tagline: string;
 }
@@ -36,6 +38,8 @@ export default function SettingsPage() {
     bank_account_number: "",
     bank_account_name: "",
     hero_image_url: "",
+    hero_image_landscape: "",
+    hero_image_portrait: "",
     hero_title: "",
     hero_tagline: "",
   });
@@ -67,6 +71,8 @@ export default function SettingsPage() {
           bank_account_number: data.bank_account_number || "",
           bank_account_name: data.bank_account_name || "",
           hero_image_url: data.hero_image_url || "",
+          hero_image_landscape: data.hero_image_landscape || "",
+          hero_image_portrait: data.hero_image_portrait || "",
           hero_title: data.hero_title || "",
           hero_tagline: data.hero_tagline || "",
         });
@@ -373,7 +379,7 @@ export default function SettingsPage() {
               {/* Hero Image */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Hero Section Image
+                  Hero Section Image (Legacy - For Both Desktop & Mobile)
                 </label>
                 <div className="mb-3">
                   <ImageUpload
@@ -391,8 +397,186 @@ export default function SettingsPage() {
                 </div>
                 <p className="text-xs text-gray-500">
                   Upload a high-quality image for your shop&apos;s hero section
-                  (recommended: 1200x600px)
+                  (recommended: 1200x600px). This will be used if landscape/portrait images are not set.
                 </p>
+              </div>
+
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-lg">🖼️</span>
+                  Responsive Hero Images (Recommended)
+                </h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  Set separate images for desktop (landscape) and mobile (portrait) displays for optimal visual impact.
+                </p>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Landscape Image for Desktop */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      📱 Desktop Image (Landscape)
+                    </label>
+                    <div className="mb-3">
+                      <ImageUpload
+                        bucket="hero-images"
+                        onUploadComplete={(url) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            hero_image_landscape: url,
+                          }))
+                        }
+                        onError={(error) =>
+                          setErrors((prev) => ({ ...prev, hero_image_landscape: error }))
+                        }
+                      />
+                    </div>
+                    {formData.hero_image_landscape && (
+                      <div className="mt-4">
+                        <p className="text-xs font-semibold text-gray-600 mb-2">Current Image:</p>
+                        <div className="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={formData.hero_image_landscape}
+                            alt="Landscape preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (shop?.id && confirm("Delete this image?")) {
+                              try {
+                                const formDataObj = new FormData();
+                                formDataObj.append("shopId", shop.id);
+                                formDataObj.append("userId", user?.id || "");
+                                formDataObj.append("imageType", "landscape");
+                                formDataObj.append("deleteOld", "true");
+
+                                const response = await fetch(
+                                  "/api/shop/update-hero-images",
+                                  {
+                                    method: "POST",
+                                    body: formDataObj,
+                                  }
+                                );
+
+                                if (response.ok) {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    hero_image_landscape: "",
+                                  }));
+                                  setSuccessMessage("Landscape image deleted");
+                                } else {
+                                  const error = await response.json();
+                                  setErrors((prev) => ({
+                                    ...prev,
+                                    hero_image_landscape: error.error,
+                                  }));
+                                }
+                              } catch (err) {
+                                const errorMessage =
+                                  err instanceof Error ? err.message : String(err);
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  hero_image_landscape: errorMessage,
+                                }));
+                              }
+                            }
+                          }}
+                          className="mt-2 w-full px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 font-medium text-sm hover:bg-red-100 transition-colors"
+                        >
+                          🗑️ Delete Image
+                        </button>
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-3">
+                      Recommended size: 1600x500px (16:5 aspect ratio) for desktop displays
+                    </p>
+                  </div>
+
+                  {/* Portrait Image for Mobile */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      📲 Mobile Image (Portrait)
+                    </label>
+                    <div className="mb-3">
+                      <ImageUpload
+                        bucket="hero-images"
+                        onUploadComplete={(url) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            hero_image_portrait: url,
+                          }))
+                        }
+                        onError={(error) =>
+                          setErrors((prev) => ({ ...prev, hero_image_portrait: error }))
+                        }
+                      />
+                    </div>
+                    {formData.hero_image_portrait && (
+                      <div className="mt-4">
+                        <p className="text-xs font-semibold text-gray-600 mb-2">Current Image:</p>
+                        <div className="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={formData.hero_image_portrait}
+                            alt="Portrait preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (shop?.id && confirm("Delete this image?")) {
+                              try {
+                                const formDataObj = new FormData();
+                                formDataObj.append("shopId", shop.id);
+                                formDataObj.append("userId", user?.id || "");
+                                formDataObj.append("imageType", "portrait");
+                                formDataObj.append("deleteOld", "true");
+
+                                const response = await fetch(
+                                  "/api/shop/update-hero-images",
+                                  {
+                                    method: "POST",
+                                    body: formDataObj,
+                                  }
+                                );
+
+                                if (response.ok) {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    hero_image_portrait: "",
+                                  }));
+                                  setSuccessMessage("Portrait image deleted");
+                                } else {
+                                  const error = await response.json();
+                                  setErrors((prev) => ({
+                                    ...prev,
+                                    hero_image_portrait: error.error,
+                                  }));
+                                }
+                              } catch (err) {
+                                const errorMessage =
+                                  err instanceof Error ? err.message : String(err);
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  hero_image_portrait: errorMessage,
+                                }));
+                              }
+                            }
+                          }}
+                          className="mt-2 w-full px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 font-medium text-sm hover:bg-red-100 transition-colors"
+                        >
+                          🗑️ Delete Image
+                        </button>
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-3">
+                      Recommended size: 600x900px (2:3 aspect ratio) for mobile displays
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Hero Title */}

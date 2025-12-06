@@ -36,10 +36,7 @@ export async function POST(req: Request) {
     const envValidation = validateEnvVars();
     if (!envValidation.valid) {
       console.error("Environment variable error:", envValidation.error);
-      return NextResponse.json(
-        { error: envValidation.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: envValidation.error }, { status: 500 });
     }
 
     const body = await req.json();

@@ -12,6 +12,8 @@ type Shop = {
   bank_account_number?: string;
   bank_account_name?: string;
   hero_image_url?: string;
+  hero_image_landscape?: string;
+  hero_image_portrait?: string;
   hero_title?: string;
   hero_tagline?: string;
 };
@@ -68,6 +70,8 @@ export default async function ShopPage({ params }: Props) {
     shop?.hero_tagline ||
     "Discover our curated collection of premium products. Quality guaranteed with fast delivery.";
   const heroImageUrl = shop?.hero_image_url;
+  const heroImageLandscape = shop?.hero_image_landscape;
+  const heroImagePortrait = shop?.hero_image_portrait;
   const shopBankDetails =
     shop?.bank_name && shop?.bank_account_number && shop?.bank_account_name
       ? {
@@ -84,6 +88,8 @@ export default async function ShopPage({ params }: Props) {
         heroTitle={heroTitle}
         heroTagline={heroTagline}
         heroImageUrl={heroImageUrl}
+        heroImageLandscape={heroImageLandscape}
+        heroImagePortrait={heroImagePortrait}
         shopName={shopName}
         whatsappNumber={whatsappNumber}
       />

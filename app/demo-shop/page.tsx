@@ -83,74 +83,122 @@ export default function DemoShopPage() {
       {/* Navbar */}
       <DemoShopNavbar shopName={shop.name} tagline={shop.tagline} />
 
-      {/* Hero Section */}
-      <section className="relative bg-linear-to-br from-blue-50 via-blue-50 to-blue-100 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute top-40 right-10 w-72 h-72 bg-sky-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        </div>
+      {/* Hero Section - Responsive with Grid Layout */}
+      <section className="relative bg-white overflow-hidden">
+        {/* Desktop: Two Column Layout with Landscape Image */}
+        <div className="hidden lg:block relative bg-linear-to-br from-blue-50 via-blue-50 to-blue-100 overflow-hidden py-20">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
+            <div className="absolute top-40 right-10 w-72 h-72 bg-sky-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
+            <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+          </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left: Text Content - Centered on mobile */}
-            <div className="space-y-6 text-center lg:text-left">
-              <div className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-bold text-blue-700 mx-auto lg:mx-0 animate-pulse">
-                ✨ Premium Product Collection
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Left: Text Content */}
+              <div className="space-y-6 text-center lg:text-left">
+                <div className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-bold text-blue-700 mx-auto lg:mx-0 animate-pulse">
+                  ✨ Premium Product Collection
+                </div>
+
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mx-auto lg:mx-0 max-w-2xl">
+                  Shop with{" "}
+                  <span className="bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                    Confidence
+                  </span>
+                </h1>
+
+                <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-lg mx-auto lg:mx-0">
+                  Discover our curated collection of premium products designed to
+                  enhance your lifestyle. Quality guaranteed with fast delivery.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <button
+                    onClick={() => {
+                      document
+                        .getElementById("products")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-linear-to-r from-blue-600 to-blue-700 text-white font-bold hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                  >
+                    👇 Shop Now
+                  </button>
+                  <button
+                    disabled
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border-2 border-blue-600 text-blue-600 font-bold opacity-50 cursor-not-allowed"
+                  >
+                    💬 Chat (Demo)
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-center lg:justify-start gap-6 pt-4 text-sm font-bold text-gray-700 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🚚</span>
+                    <span>Fast Delivery</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">✅</span>
+                    <span>Verified</span>
+                  </div>
+                </div>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mx-auto lg:mx-0 max-w-2xl">
-                Shop with{" "}
-                <span className="bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                  Confidence
-                </span>
-              </h1>
+              {/* Right: Hero Image */}
+              <div className="relative h-96 sm:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://plus.unsplash.com/premium_photo-1674739375749-7efe56fc8bbb?q=80&w=386&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="Products"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-lg mx-auto lg:mx-0">
-                Discover our curated collection of premium products designed to
-                enhance your lifestyle. Quality guaranteed with fast delivery.
-              </p>
+        {/* Mobile: Full Width Portrait Image with Text Overlay */}
+        <div className="lg:hidden relative h-[600px] w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Products"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="absolute inset-0 flex items-end">
+            <div className="w-full px-4 sm:px-6 pb-8 space-y-6">
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-5xl font-black text-white leading-tight">
+                  Shop with Confidence
+                </h1>
+
+                <p className="text-base text-white/90">
+                  Discover our curated collection of premium products designed to
+                  enhance your lifestyle.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
                 <button
                   onClick={() => {
                     document
                       .getElementById("products")
                       ?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-linear-to-r from-blue-600 to-blue-700 text-white font-bold hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                  className="w-full px-6 py-3 rounded-xl bg-white text-gray-900 font-bold hover:shadow-lg transition-all"
                 >
                   👇 Shop Now
                 </button>
                 <button
                   disabled
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border-2 border-blue-600 text-blue-600 font-bold opacity-50 cursor-not-allowed"
+                  className="w-full px-6 py-3 rounded-xl border-2 border-white text-white font-bold text-center opacity-50 cursor-not-allowed"
                 >
                   💬 Chat (Demo)
                 </button>
               </div>
-
-              <div className="flex items-center justify-center lg:justify-start gap-6 pt-4 text-sm font-bold text-gray-700 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🚚</span>
-                  <span>Fast Delivery</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">✅</span>
-                  <span>Verified</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Hero Image */}
-            <div className="relative h-96 sm:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://plus.unsplash.com/premium_photo-1674739375749-7efe56fc8bbb?q=80&w=386&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Products"
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
             </div>
           </div>
         </div>
